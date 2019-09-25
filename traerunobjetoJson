@@ -1,0 +1,37 @@
+ [HttpPost]|
+        public JsonResult checkCarExhibition(string id)
+        {
+            var parameter = db.icb_sysparameter.Where(d => d.syspar_cod == "P116").FirstOrDefault();
+            var razoningreso = parameter != null ? Convert.ToInt32(parameter.syspar_value) : 6;
+            var existe = db.tencabezaorden.Where(o => o.placa == id && o.razoningreso == razoningreso).FirstOrDefault();
+            if (existe != null)
+            {
+                //veo si tiene repuestos
+                var repsolicitados = db.tsolicitudrepuestosot.Where(d => d.idorden == existe.id && d.recibido == true).ToList();
+        |        if (repsolicitados.Count > 0)
+                {
+                    var listasolicitados = repsolicitados.Select(d => new {
+                        id=d.tdetallerepuestosot.idrepuesto,
+                        nombre=d.tdetallerepuestosot.icb_referencia.ref_descripcion,
+                        valor_unitario=d.tdetallerepuestosot.valorunitario,
+                        valor_unitario_string = d.tdetallerepuestosot.valorunitario.ToString("N0",new CultureInfo("is-IS")),
+
+                        cantidad = d.canttraslado,
+                        iva=d.tdetallerepuestosot.poriva,
+                        desc=d.tdetallerepuestosot.pordescto,
+                        tipo_tarifa=d.tdetallerepuestosot.tipotarifa,
+                        centro_costo=d.tdetallerepuestosot.centro_costo,
+
+                    }).ToList();
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+
+            }
+            return Json(existe);
+        }
