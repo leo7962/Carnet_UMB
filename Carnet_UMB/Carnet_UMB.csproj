@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bootstrap.sass" Version="4.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
   </ItemGroup>
 
